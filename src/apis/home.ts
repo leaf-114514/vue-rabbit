@@ -6,9 +6,12 @@ import httpInstance from "@/utils/http";
  * @param {*}
  * @return {*}
  */
-export const getBannerAPI = () => {
+export const getBannerAPI = (distributionSite: string = '1') => {
     return httpInstance({
-        url: '/home/banner'
+        url: '/home/banner',
+        params: {
+          distributionSite
+        }
     })
 }
 

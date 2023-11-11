@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { getBannerAPI } from '@/apis/home';
 import { getCategoryAPI } from '@/apis/category';
 import { onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
@@ -35,6 +36,22 @@ const getCategory = async () => {
 }
 
 onMounted(()=>getCategory())
+
+interface bannerListItme {
+    hrefUrl: string
+    id: string
+    imgUrl: string
+    type: string
+}
+
+const bannerList = ref<bannerListItme[]>()
+
+const getBanner = async ()=>{
+    const res = await getBannerAPI('2') as any
+    bannerList.value = res.result
+}
+
+onMounted(() => getBanner())
 </script>
 
 <template>
@@ -48,6 +65,14 @@ onMounted(()=>getCategory())
         </el-breadcrumb>
       </div>
     </div>
+
+    <div class="home-banner">
+    <el-carousel height="500px">
+      <el-carousel-item v-for="item in bannerList" :key="item.id">
+        <img :src="item.imgUrl" alt="">
+      </el-carousel-item>
+    </el-carousel>
+  </div>
   </div>
 </template>
 
@@ -129,5 +154,16 @@ onMounted(()=>getCategory())
   .bread-container {
     padding: 25px 0;
   }
+
+  .home-banner {
+  width: 1240px;
+  height: 500px;
+  margin: 0 auto;
+
+  img {
+    width: 100%;
+    height: 500px;
+  }
+}
 }
 </style>
