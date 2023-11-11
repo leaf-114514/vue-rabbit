@@ -2,7 +2,7 @@
 import { getBannerAPI } from '@/apis/home';
 import { getCategoryAPI } from '@/apis/category';
 import { onMounted, ref } from 'vue';
-import { useRoute } from 'vue-router';
+import { onBeforeRouteUpdate, useRoute } from 'vue-router';
 import GoodItem from '../Home/components/GoodItem.vue';
 
 const categoryData = ref<{
@@ -31,10 +31,14 @@ const categoryData = ref<{
 
 const route = useRoute()
 
-const getCategory = async () => {
-    const res = await getCategoryAPI(route.params.id) as any
+const getCategory = async (id=route.params.id) => {
+    const res = await getCategoryAPI(id) as any
     categoryData.value = res.result
 }
+
+onBeforeRouteUpdate((to)=>{
+  getCategory(to.params.id)
+})
 
 onMounted(()=>getCategory())
 
