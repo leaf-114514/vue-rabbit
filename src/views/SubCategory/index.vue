@@ -76,6 +76,16 @@ const tabChange = ()=>{
     getGoodList()
   }
 
+  const disabled = ref(false)
+  const load = async ()=>{
+    goodListRequestData.value.page++
+    const res = await getSubCategoryAPI(goodListRequestData.value) as any
+    goodList.value = [...goodList.value as any, ...res.result.items]
+    if(goodList.value.length === 0) {
+      disabled.value = true
+    }
+  }
+
 onMounted(()=>getGoodList())
 </script>
 
@@ -96,7 +106,7 @@ onMounted(()=>getGoodList())
         <el-tab-pane label="最高人气" name="orderNum"></el-tab-pane>
         <el-tab-pane label="评论最多" name="evaluateNum"></el-tab-pane>
       </el-tabs>
-      <div class="body">
+      <div class="body" v-infinite-scroll="load" :infinite-scroll-disabled="disabled">
          <!-- 商品列表-->
          <GoodItem v-for="good in goodList" :good="good" />
       </div>
