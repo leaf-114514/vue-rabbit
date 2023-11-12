@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { getCategoryFilterAPI } from '@/apis/category';
+import { getCategoryFilterAPI, getSubCategoryAPI } from '@/apis/category';
 import { onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
+import GoodItem from '../Home/components/GoodItem.vue';
 
 const categoryData = ref<{
   brands: {
@@ -49,6 +50,29 @@ const getCategoryDate = async ()=>{
 }
 
 onMounted(()=>getCategoryDate())
+
+const goodList = ref<{
+    desc: string
+    id: string
+    name: string
+    orderNum: number
+    picture: string
+    price: string
+  }[]>()
+const goodListRequestData = ref({
+    categoryId: route.params.id,
+    page: 1,
+    pageSize: 20,
+    sortField: 'publishTime'
+  })
+const getGoodList = async ()=>{
+  const res = await getSubCategoryAPI(goodListRequestData.value) as any
+
+  goodList.value = res.result.items
+  
+}
+
+onMounted(()=>getGoodList())
 </script>
 
 <template>
@@ -70,6 +94,7 @@ onMounted(()=>getCategoryDate())
       </el-tabs>
       <div class="body">
          <!-- 商品列表-->
+         <GoodItem v-for="good in goodList" :good="good" />
       </div>
     </div>
   </div>

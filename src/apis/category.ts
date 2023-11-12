@@ -15,7 +15,7 @@ export const getCategoryAPI = (id: string | string[]) => {
  * @return {*}
  */
 
- export const getCategoryFilterAPI = (id) => {
+ export const getCategoryFilterAPI = (id: string | string[]) => {
     return httpInstance({
       url:'/category/sub/filter',
       params:{
@@ -23,3 +23,21 @@ export const getCategoryAPI = (id: string | string[]) => {
       }
     })
   }
+
+  /**
+ * @description: 获取导航数据
+ * @data { 
+     categoryId: 1005000 ,
+     page: 1,
+     pageSize: 20,
+     sortField: 'publishTime' | 'orderNum' | 'evaluateNum'
+   } 
+ * @return {*}
+ */
+export const getSubCategoryAPI = <T>(data: T) => {
+  return httpInstance({
+    url:'/category/goods/temporary',
+    method:'POST',
+    data
+  })
+}
