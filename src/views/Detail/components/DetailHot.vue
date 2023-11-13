@@ -1,8 +1,16 @@
 <script setup lang="ts">
 import { getHotGoodsAPI } from '@/apis/detail';
 import GoodItem from '@/views/Home/components/GoodItem.vue';
-import { onMounted, ref } from 'vue'
+import {  onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router';
+
+const props = defineProps<{
+  hotType: number
+  title: string
+}>()
+
+
+
 const hotList = ref<{
   desc: string
   id: string
@@ -13,7 +21,7 @@ const hotList = ref<{
 }[]>()
 const route = useRoute()
 const getHotList = async ()=>{
-  const res = await getHotGoodsAPI(route.params.id, 1) as any
+  const res = await getHotGoodsAPI(route.params.id, props.hotType) as any
   hotList.value = res.result
 }
 
@@ -23,7 +31,7 @@ onMounted(()=>getHotList())
 
 <template>
   <div class="goods-hot">
-    <h3>周日榜单</h3>
+    <h3>{{ title }}</h3>
     <!-- 商品区块 -->
     <GoodItem v-for="item in hotList" :good="item" />
   </div>
