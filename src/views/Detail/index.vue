@@ -2,15 +2,20 @@
 import DetailHot from './components/DetailHot.vue'
 import { getDetail } from '@/apis/detail';
 import { onMounted, ref } from 'vue';
-import { useRoute } from 'vue-router';
+import { onBeforeRouteUpdate, useRoute } from 'vue-router';
 import { goodType } from './types/GoodsType'
+import ImageView from '@/components/imageView/index.vue';
 
 const goods = ref<goodType>()
 const route = useRoute()
-const getGoods = async ()=>{
-  const res = await getDetail(route.params.id) as any
+const getGoods = async (id=route.params.id)=>{
+  const res = await getDetail(id) as any
   goods.value = res.result
 }
+
+onBeforeRouteUpdate((to)=>{
+  getGoods(to.params.id)
+})
 
 onMounted(()=>getGoods())
 </script>
@@ -34,7 +39,7 @@ onMounted(()=>getGoods())
           <div class="goods-info">
             <div class="media">
               <!-- 图片预览区 -->
-
+              <ImageView :image-list="goods?.mainPictures" />
               <!-- 统计数量 -->
               <ul class="goods-sales">
                 <li>
